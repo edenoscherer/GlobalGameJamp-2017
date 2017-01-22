@@ -69,7 +69,7 @@ public class PlayerBehaviourScript : MonoBehaviour
     private void FixedUpdate()
     {
         
-        if (isWalking)
+        if (isWalking && !isInFloor)
         {
             if (turnedToRight)
                 rb.velocity = new Vector2(speed, rb.velocity.y);
