@@ -94,4 +94,7 @@ public class PlayerBehaviourScript : MonoBehaviour
         an.SetBool("Walking", (isInFloor && isWalking));
         an.SetBool("Jump", !isInFloor);
     }
+
+    private void OnDrawGizmosSelected()    {        Gizmos.color = Color.red;        Gizmos.DrawWireSphere(this.checkGround.position, this.validRadiusFloor);        Gizmos.DrawWireSphere(this.checkWall.position, this.validRadiusWall);    }
+
 }
