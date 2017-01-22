@@ -44,7 +44,7 @@ public class PlayerBehaviourScript : MonoBehaviour
 
         isInFloor = Physics2D.OverlapCircle(checkGround.position, validRadiusFloor, solid);
         isInWall = Physics2D.OverlapCircle(checkWall.position, validRadiusWall, solid);
-        
+
         if (isAlive)
         {
 
@@ -68,8 +68,8 @@ public class PlayerBehaviourScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
-        if (isWalking && !isInFloor)
+
+        if (isWalking && !isInWall)
         {
             if (turnedToRight)
                 rb.velocity = new Vector2(speed, rb.velocity.y);
