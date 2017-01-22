@@ -27,54 +27,54 @@ public class PlayerBehaviourScript : MonoBehaviour
     public float validRadiusWall;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
 
-        rb = GetComponent<Rigidbody2D>();
-        tr = GetComponent<Transform>();
-        an = GetComponent<Animator>();
+        this.rb = GetComponent<Rigidbody2D>();
+        this.tr = GetComponent<Transform>();
+        this.an = GetComponent<Animator>();
 
-        isAlive = true;
-        turnedToRight = true;
+        this.isAlive = true;
+        this.turnedToRight = true;
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        isInFloor = Physics2D.OverlapCircle(checkGround.position, validRadiusFloor, solid);
-        isInWall = Physics2D.OverlapCircle(checkWall.position, validRadiusWall, solid);
+        this.isInFloor = Physics2D.OverlapCircle(this.checkGround.position, this.validRadiusFloor, this.solid);
+        this.isInWall = Physics2D.OverlapCircle(this.checkWall.position, this.validRadiusWall, this.solid);
 
-        if (isAlive)
+        if (this.isAlive)
         {
 
-            axis = Input.GetAxisRaw("Horizontal");
+            this.axis = Input.GetAxisRaw("Horizontal");
 
-            isWalking = Mathf.Abs(axis) > 0;
+            this.isWalking = Mathf.Abs(this.axis) > 0;
 
-            if (axis > 0f && !turnedToRight)
-                Flip();
-            else if (axis < 0f && turnedToRight)
-                Flip();
+            if (this.axis > 0f && !this.turnedToRight)
+                this.Flip();
+            else if (this.axis < 0f && this.turnedToRight)
+                this.Flip();
 
-            if (Input.GetButtonDown("Jump") && isInFloor)
-                rb.AddForce(tr.up * leapForce);
+            if (Input.GetButtonDown("Jump") && this.isInFloor)
+                this.rb.AddForce(this.tr.up * this.leapForce);
 
-
-            Animations();
         }
+
+        this.Animations();
 
     }
 
     private void FixedUpdate()
     {
 
-        if (isWalking && !isInWall)
+        if (this.isWalking && !this.isInWall)
         {
-            if (turnedToRight)
-                rb.velocity = new Vector2(speed, rb.velocity.y);
+            if (this.turnedToRight)
+                this.rb.velocity = new Vector2(this.speed, this.rb.velocity.y);
             else
-                rb.velocity = new Vector2(-speed, rb.velocity.y);
+                this.rb.velocity = new Vector2(-this.speed, this.rb.velocity.y);
         }
 
     }
@@ -82,20 +82,34 @@ public class PlayerBehaviourScript : MonoBehaviour
     void Flip()
     {
 
-        turnedToRight = !turnedToRight;
+        this.turnedToRight = !this.turnedToRight;
 
-        tr.localScale = new Vector2(-tr.localScale.x, tr.localScale.y);
+        this.tr.localScale = new Vector2(-this.tr.localScale.x, this.tr.localScale.y);
 
     }
 
     void Animations()
     {
 
-        an.SetBool("Walking", (isInFloor && isWalking));
-        an.SetBool("Jump", !isInFloor);
+        this.an.SetBool("Walking", (this.isInFloor && this.isWalking));
+        this.an.SetBool("Jump", !this.isInFloor);
+        this.an.SetBool("Dead", !this.isAlive);
     }
 
-    private void OnDrawGizmosSelected()    {        Gizmos.color = Color.red;        Gizmos.DrawWireSphere(this.checkGround.position, this.validRadiusFloor);        Gizmos.DrawWireSphere(this.checkWall.position, this.validRadiusWall);    }
+    void OnDrawGizmosSelected()    {        Gizmos.color = Color.red;        Gizmos.DrawWireSphere(this.checkGround.position, this.validRadiusFloor);        Gizmos.DrawWireSphere(this.checkWall.position, this.validRadiusWall);    }
+
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        Debug.Log("Hello Enemies");
+        Debug.Log("Hello " + collider.gameObject.CompareTag("Enemies"));
+        if (collider.gameObject.CompareTag("Enemies"))
+            this.HitByEnemies(collider);
+    }
+
+    void HitByEnemies(Collider2D collider)
+    {
+        this.isAlive = false;
+    }
 
 }
 
