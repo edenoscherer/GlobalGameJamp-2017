@@ -14,11 +14,14 @@ public class PlayerBehaviourScript : MonoBehaviour
     public Transform checkGround;
     public Transform checkWall;
 
+    public AudioSource footstepsSound;
+
     private bool isWalking;
     private bool isInFloor;
     private bool isInWall;
     private bool isAlive;
     private bool turnedToRight;
+    private bool playingFootstepsSound;
 
     private float axis;
     public float speed;
@@ -36,6 +39,7 @@ public class PlayerBehaviourScript : MonoBehaviour
 
         isAlive = true;
         turnedToRight = true;
+        this.playingFootstepsSound = false;
     }
 
     // Update is called once per frame
@@ -66,18 +70,21 @@ public class PlayerBehaviourScript : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
 
-        if (isWalking && !isInWall)
+        if (this.isWalking && !this.isInWall)
         {
-            if (turnedToRight)
+            if (this.turnedToRight)
                 rb.velocity = new Vector2(speed, rb.velocity.y);
             else
                 rb.velocity = new Vector2(-speed, rb.velocity.y);
         }
 
+        this.ControlFootstepsSound();
     }
+
+    //----------------------------------------------------------------------------------------------------------------
 
     void Flip()
     {
@@ -93,5 +100,24 @@ public class PlayerBehaviourScript : MonoBehaviour
 
         an.SetBool("Walking", (isInFloor && isWalking));
         an.SetBool("Jump", !isInFloor);
+    }
+
+    /**
+     * Controla a reprodução do som dos passo
+     * 
+     * @param walking Flag que indica se o personagem esta ou não andando
+     */
+    private void ControlFootstepsSound()
+    {
+        if (this.isWalking && this.isInFloor && !this.playingFootstepsSound)
+        {
+            this.footstepsSound.Play();
+            this.playingFootstepsSound = true;
+        }
+        else if ((!this.isWalking || !this.isInFloor) && this.playingFootstepsSound)
+        {
+            this.footstepsSound.Stop();
+            this.playingFootstepsSound = false;
+        }
     }
 }
