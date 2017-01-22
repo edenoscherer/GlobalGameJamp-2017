@@ -100,7 +100,8 @@ public class PlayerBehaviourScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log("Hello " + collider.gameObject.CompareTag("Enemies"), gameObject);
+        Debug.Log("Hello Enemies");
+        Debug.Log("Hello " + collider.gameObject.CompareTag("Enemies"));
         if (collider.gameObject.CompareTag("Enemies"))
             this.HitByEnemies(collider);
     }
